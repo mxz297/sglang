@@ -100,10 +100,8 @@ def _is_dcp_mla_decode_phase(forward_batch: ForwardBatch) -> bool:
     if not forward_batch.forward_mode.is_target_verify() or not _is_cuda:
         return False
 
-    server_args = get_server_args()
-    decode_backend = (
-        server_args.decode_attention_backend or server_args.attention_backend
-    )
+    kernel = get_exec().kernel
+    decode_backend = kernel.decode_attention_backend or kernel.attention_backend
     return (
         get_spec().speculative_algorithm == "DSPARK"
         and get_spec().speculative_attention_mode == "decode"
